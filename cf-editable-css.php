@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Crowd Favorite Editable CSS
+Plugin Name: CF Editable CSS
 Plugin URI: http://crowdfavorite.com
 Description:  Gives the user the ability to edit a CSS file
 Version: 1.0
