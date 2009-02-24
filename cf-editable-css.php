@@ -44,9 +44,12 @@ add_action('init','cfcss_request_handler');
 
 function cfcss_save($content) {
 	global $cf_css_themedir;
+	if(!get_magic_quotes_gpc()) {
+		$content = stripslashes($content);
+	}
 	$cf_css_filename = $cf_css_themedir.'custom.css';
-	$cf_css_file = fopen($cf_css_filename,"w+");
-	fwrite($cf_css_file,$content);
+	$cf_css_file = fopen($cf_css_filename,"w+b");
+	fwrite($cf_css_file,cf_normalize_line_endings($content));
 	fclose($cf_css_file);
 }
 
@@ -54,7 +57,7 @@ function cfcss_options_form() {
 	global $cf_css_themedir;
 	$cf_css_filename = $cf_css_themedir.'custom.css';
 	if(file_exists($cf_css_filename) && is_readable($cf_css_filename)) {
-		$cf_css_file = fopen($cf_css_filename,"r");
+		$cf_css_file = fopen($cf_css_filename,"rb");
 		$cf_css_contents = fread($cf_css_file,filesize($cf_css_filename));
 		fclose($cf_css_file);
 	}
