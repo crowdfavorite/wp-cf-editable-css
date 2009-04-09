@@ -30,11 +30,18 @@ add_action('admin_menu', 'cfcss_menu_items');
 
 function cfcss_request_handler() {
 	if(current_user_can('manage_options')) {
+		$blogurl = '';
+		if (is_ssl()) {
+			$blogurl = str_replace('http://','https://',get_bloginfo('wpurl'));
+		}
+		else {
+			$blogurl = get_bloginfo('wpurl');
+		}		
 		if(isset($_POST['cf_action'])) {
 			switch($_POST['cf_action']) {
 				case 'cfcss_save':
 					cfcss_save($_POST['cfcss_content']);
-					wp_redirect(get_bloginfo('wpurl').'/wp-admin/themes.php?page=cf-editable-css.php');
+					wp_redirect($blogurl.'/wp-admin/themes.php?page=cf-editable-css.php');
 					die();
 			}
 		}
@@ -119,7 +126,7 @@ function cfcss_edit_form($cf_css_contents) {
 		<h4>
 			'.__('All styles written into this file will override the current theme styles.  Be cautious as this may cause undesired results.').'
 		</h4>
-		<form action="'.get_bloginfo('url').'/wp-admin/options-general.php" method="post" id="cfcss-form">
+		<form action="" method="post" id="cfcss-form">
 			<textarea name="cfcss_content" cols="115" rows="25">'.$cf_css_contents.'</textarea>
 			<p class="submit" style="border-top: none;">
 				<input type="hidden" name="cf_action" value="cfcss_save" />
