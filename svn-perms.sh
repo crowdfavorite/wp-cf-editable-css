@@ -19,11 +19,11 @@
 #   This will work in the scope of the current user. Someone doing updates as root will have the same 
 #   effect on the editability of files as with normal SVN operation.
 
-REAL_SVN='/opt/local/bin/svn';
-WORDPRESS_PATH='/Users/shawn/Sites/healthier-news/';
+REAL_SVN='/usr/bin/svn';
+WORDPRESS_PATH='/path/to/web/root/';
 
 $REAL_SVN $@;
 
 if [ $1 = 'up' ]; then
-	find -L $WORDPRESS_PATH -type f -name 'custom.css' -exec bash -c 'echo $0; chmod 0777 $0' '{}' \;
+	find -L $WORDPRESS_PATH -type f -name 'custom.css' -exec bash -c 'chmod 0777 $0' '{}' \;
 fi
