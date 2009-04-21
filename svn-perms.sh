@@ -4,11 +4,13 @@
 # svn command while running a few operations after the svn command has run.
 # 
 # To install:
-#   1. move this script to another location on the server so that it can be customized
-#   2. edit the paths for REAL_SVN and WORDPRESS_PATH to reflect the server setup
-#	3. make sure this file is editable with chmod +x svn-perms.sh
-#   4. edit the ~/.bashrc file and add a new line:
-#		alias svn="/path/to/this/file $@"
+#   as root:
+#      1. move this script to another location on the server so that it can be customized
+#      2. edit the paths for REAL_SVN and WORDPRESS_PATH to reflect the server setup
+#      3. make sure this file is editable with chmod +x svn-perms.sh
+#   as normal user:
+#      4. edit the ~/.bashrc file and add a new line:
+#           alias svn="/path/to/this/file $@"
 # 
 # Usage
 #
