@@ -12,7 +12,14 @@ Author URI: http://crowdfavorite.com
 // ini_set('error_reporting', E_ALL);
 
 load_plugin_textdomain('cf-css');
-$cf_css_themedir = trailingslashit(str_replace(trailingslashit(get_bloginfo('url')),ABSPATH,get_bloginfo('template_directory')));
+$cf_css_blogurl = '';
+if (is_ssl()) {
+	$cf_css_blogurl = str_replace('http://','https://',get_bloginfo('wpurl'));
+}
+else {
+	$cf_css_blogurl = get_bloginfo('wpurl');
+}		
+$cf_css_themedir = trailingslashit(str_replace(trailingslashit($cf_css_blogurl),ABSPATH,get_bloginfo('template_directory')));
 
 function cfcss_menu_items() {
 	if (current_user_can('manage_options')) {
@@ -63,6 +70,7 @@ function cfcss_save($content) {
 function cfcss_options_form() {
 	global $cf_css_themedir;
 	$cf_css_filename = $cf_css_themedir.'custom.css';
+
 	if(file_exists($cf_css_filename) && is_readable($cf_css_filename)) {
 		$cf_css_file = fopen($cf_css_filename,"rb");
 		$cf_css_contents = fread($cf_css_file,filesize($cf_css_filename));
