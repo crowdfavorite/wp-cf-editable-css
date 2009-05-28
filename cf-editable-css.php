@@ -3,7 +3,7 @@
 Plugin Name: CF Editable CSS
 Plugin URI: http://crowdfavorite.com
 Description:  Gives the user the ability to edit a CSS file
-Version: 1.0
+Version: 1.1
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */
