@@ -145,4 +145,8 @@ function cfcss_edit_form($cf_css_contents) {
 	');
 }
 
+/**
+ * Enqueue style into theme via wp_head
+ */
+wp_enqueue_style('cf-editable-css', $cf_css_themedir.'custom.css');
 ?>
