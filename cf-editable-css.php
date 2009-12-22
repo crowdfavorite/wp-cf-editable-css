@@ -21,6 +21,8 @@ else {
 }		
 $cf_css_themedir = trailingslashit(str_replace(trailingslashit($cf_css_blogurl),ABSPATH,get_bloginfo('template_directory')));
 
+define('CFCSS_CSS_URL', get_bloginfo('template_directory') . '/custom.css');
+
 function cfcss_menu_items() {
 	if (current_user_can('manage_options')) {
 		add_submenu_page(
@@ -148,5 +150,5 @@ function cfcss_edit_form($cf_css_contents) {
 /**
  * Enqueue style into theme via wp_head
  */
-wp_enqueue_style('cf-editable-css', $cf_css_themedir.'custom.css');
+wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
 ?>
