@@ -150,5 +150,7 @@ function cfcss_edit_form($cf_css_contents) {
 /**
  * Enqueue style into theme via wp_head
  */
-wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
+if (!is_admin()) {
+	wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
+}
 ?>
