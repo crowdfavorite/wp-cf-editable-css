@@ -28,4 +28,6 @@ $REAL_SVN $@;
 
 if [ $1 = 'up' ]; then
 	find -L $WORDPRESS_PATH -type f -name 'custom.css' -exec bash -c 'chmod 0777 $0' '{}' \;
+elif [ $1 = 'switch' ]; then
+	find -L $WORDPRESS_PATH -type f -name 'custom.css' -exec bash -c 'chmod 0777 $0' '{}' \;
 fi
