@@ -60,12 +60,16 @@ add_action('init','cfcss_request_handler');
 
 function cfcss_save($content) {
 	global $cf_css_themedir;
+	$content = strip_tags($content);
 	if(!get_magic_quotes_gpc()) {
 		$content = stripslashes($content);
 	}
+	if (function_exists('cf_normalize_line_endings')) {
+		$content = cf_normalize_line_endings($content);
+	}
 	$cf_css_filename = $cf_css_themedir.'custom.css';
 	$cf_css_file = fopen($cf_css_filename,"w+b");
-	fwrite($cf_css_file,cf_normalize_line_endings($content));
+	fwrite($cf_css_file,$content);
 	fclose($cf_css_file);
 }
 
@@ -137,7 +141,7 @@ function cfcss_edit_form($cf_css_contents) {
 			'.__('All styles written into this file will override the current theme styles.  Be cautious as this may cause undesired results.').'
 		</h4>
 		<form action="" method="post" id="cfcss-form">
-			<textarea name="cfcss_content" cols="115" rows="25">'.$cf_css_contents.'</textarea>
+			<textarea name="cfcss_content" cols="115" rows="25">'.htmlentities($cf_css_contents).'</textarea>
 			<p class="submit" style="border-top: none;">
 				<input type="hidden" name="cf_action" value="cfcss_save" />
 				<input type="submit" name="submit" id="cfcss_submit" value="'.__('Save CSS Changes', 'cf-css').'" />
