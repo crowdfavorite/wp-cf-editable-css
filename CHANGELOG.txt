@@ -1,0 +1,5 @@
+# CF Editable CSS Changelog
+
+## 1.1.1
+
+- HTML content in the text area should now be stripped on save, eliminating the possibility of a tag like </textarea> breaking the content.
