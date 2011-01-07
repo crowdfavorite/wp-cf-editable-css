@@ -3,7 +3,7 @@
 Plugin Name: CF Editable CSS
 Plugin URI: http://crowdfavorite.com
 Description:  Gives the user the ability to edit a CSS file
-Version: 1.1.2
+Version: 1.2.1
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */
@@ -19,9 +19,9 @@ if (is_ssl()) {
 else {
 	$cf_css_blogurl = get_bloginfo('wpurl');
 }		
-$cf_css_themedir = trailingslashit(str_replace(trailingslashit($cf_css_blogurl),ABSPATH,get_bloginfo('template_directory')));
+$cf_css_themedir = trailingslashit(str_replace(trailingslashit($cf_css_blogurl),ABSPATH,get_stylesheet_directory_uri()));
 
-define('CFCSS_CSS_URL', get_bloginfo('template_directory') . '/custom.css');
+define('CFCSS_CSS_URL', trailingslashit(get_stylesheet_directory_uri()).'custom.css');
 
 function cfcss_menu_items() {
 	if (current_user_can('manage_options')) {
@@ -50,9 +50,29 @@ function cfcss_request_handler() {
 			switch($_POST['cf_action']) {
 				case 'cfcss_save':
 					cfcss_save($_POST['cfcss_content']);
-					wp_redirect($blogurl.'/wp-admin/themes.php?page=cf-editable-css.php');
+					if (!empty($_POST['cfcss_autoload'])) {
+						$autoload = 'yes';
+						switch ($_POST['cfcss_autoload']) {
+							case 'yes':
+							case 'no':
+								$autoload = strip_tags($_POST['cfcss_autoload']);
+								break;
+						}
+						update_option('cf_css_autoload', $autoload);
+					}
+					wp_redirect(admin_url('themes.php?page=cf-editable-css.php&updated=true'));
 					die();
 			}
+		}
+	}
+	
+	/**
+	 * Check to see if we should enqueue the style into theme via wp_head
+	 */
+	$cf_css_autoload = get_option('cf_css_autoload');
+	if (empty($cf_css_autoload) || $cf_css_autoload == 'yes') {
+		if (!is_admin()) {
+			wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
 		}
 	}
 }
@@ -81,6 +101,10 @@ function cfcss_options_form() {
 		$cf_css_file = fopen($cf_css_filename,"rb");
 		$cf_css_contents = fread($cf_css_file,filesize($cf_css_filename));
 		fclose($cf_css_file);
+	}
+	
+	if (!empty($_GET['updated']) && $_GET['updated'] == 'true') {
+		echo '<div id="cf-css-message" class="updated fade"><p><strong>'.__('Settings saved', 'cf-css').'</strong></p></div>';
 	}
 	
 	if(!is_writable($cf_css_filename)) {
@@ -130,31 +154,53 @@ function cfcss_options_form() {
 			');
 		}
 		else {
-			cfcss_edit_form($cf_css_contents);
+			$cf_css_autoload = get_option('cf_css_autoload');
+			if (empty($cf_css_autoload)) {
+				$cf_css_autoload = 'yes';
+			}
+			cfcss_edit_form($cf_css_contents, $cf_css_autoload);
 		}
 	}
 }
 
-function cfcss_edit_form($cf_css_contents) {
+function cfcss_edit_form($cf_css_contents = '', $cf_css_autoload = 'yes') {
 	print('
 		<h4>
 			'.__('All styles written into this file will override the current theme styles.  Be cautious as this may cause undesired results.').'
 		</h4>
-		<form action="" method="post" id="cfcss-form">
-			<textarea name="cfcss_content" cols="115" rows="25">'.htmlentities($cf_css_contents).'</textarea>
-			<p class="submit" style="border-top: none;">
+		<form action="'.admin_url().'" method="post" id="cfcss-form">
+			<table class="widefat">
+				<thead>
+					<tr>
+						<th scope="col" style="width:20%;">'.__('Option', 'cf-css').'</th>
+						<th scope="col">'.__('Value', 'cf-css').'</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="vertical-align:middle;"><strong>'.__('Autoload CSS file in theme:', 'cf-css').'</strong></td>
+						<td>
+							<select name="cfcss_autoload">
+								<option value="yes"'.selected($cf_css_autoload, 'yes', false).'>'.__('Yes', 'cf-css').'</option>
+								<option value="no"'.selected($cf_css_autoload, 'no', false).'>'.__('No', 'cf-css').'</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:middle;"><strong>'.__('File Content:', 'cf-css').'</strong></td>
+						<td>
+							<textarea name="cfcss_content" class="widefat" rows="25">'.htmlentities($cf_css_contents).'</textarea>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
 				<input type="hidden" name="cf_action" value="cfcss_save" />
-				<input type="submit" name="submit" id="cfcss_submit" value="'.__('Save CSS Changes', 'cf-css').'" />
+				<input type="submit" class="button-primary" name="submit" id="cfcss_submit" value="'.__('Save CSS Changes', 'cf-css').'" />
 			</p>
 		</form>
 	</div>
 	');
 }
 
-/**
- * Enqueue style into theme via wp_head
- */
-if (!is_admin()) {
-	wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
-}
 ?>
