@@ -1,5 +1,12 @@
 # CF Editable CSS Changelog
 
+## 1.2
+
+- Added option to Not Autoload the Custom CSS file via `wp_enqueue_script`
+- Cleaned up the display of the admin theme options page
+- Pointed the custom.css file url to the `get_stylesheet_directory_uri` URL for support of child themes
+- Rewrite of Readme to comply with conventions
+
 ## 1.1.2
 
 - Tested plugin successfully on WordPress 3.0
