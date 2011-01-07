@@ -1,5 +1,9 @@
 # CF Editable CSS Changelog
 
+## 1.2.1
+
+- Bug fix to autoload the CSS file if the option hasn't been saved
+
 ## 1.2
 
 - Added option to Not Autoload the Custom CSS file via `wp_enqueue_script`

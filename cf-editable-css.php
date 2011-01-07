@@ -3,7 +3,7 @@
 Plugin Name: CF Editable CSS
 Plugin URI: http://crowdfavorite.com
 Description:  Gives the user the ability to edit a CSS file
-Version: 1.2
+Version: 1.2.1
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */
@@ -70,7 +70,7 @@ function cfcss_request_handler() {
 	 * Check to see if we should enqueue the style into theme via wp_head
 	 */
 	$cf_css_autoload = get_option('cf_css_autoload');
-	if ($cf_css_autoload == 'yes') {
+	if (empty($cf_css_autoload) || $cf_css_autoload == 'yes') {
 		if (!is_admin()) {
 			wp_enqueue_style('cf-editable-css', CFCSS_CSS_URL);
 		}
